@@ -7,7 +7,11 @@ const csv = require('csvtojson')
 
 csv({
     noheader: false,
-    headers: ['timestamp', 'sensor', 'people']
+    headers: ['timestamp', 'sensor', 'people'],
+    colParser: {
+        'people': 'number',
+    },
+    checkType: true
 })
     .fromFile(csvFilePath)
     .then((jsonObj) => {

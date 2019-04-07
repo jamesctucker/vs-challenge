@@ -1,19 +1,23 @@
 import React, { Component } from 'react';
-import Papa from 'papaparse';
-
-const file = document.getElementById('file');
+import { CSVReader } from 'react-papaparse';
 
 
 class FileReader extends Component {
-    papaParse() {
-        Papa.parse(file.files[0], {
-            delimiter: ',',
-            skipEmptyLines: true,
-            complete: function (results) {
-                console.log("Parsing complete:", results.data);
-            },
-        });
-        file.addEventListener('change', papaParse)
+    constructor(props) {
+        super(props);
+        this.fileInput = React.createRef();
+    }
+
+    handleReadCSV = (res) => {
+        console.log(res.data);
+    }
+
+    handleOnError = (err, file, inputElem, reason) => {
+        console.log(err);
+    }
+
+    handleImportOffer = () => {
+        this.fileInput.current.click();
     }
 
 
@@ -23,7 +27,13 @@ class FileReader extends Component {
 
         return (
             <div>
-                <input id="file" type="file">Upload</input>
+                <CSVReader
+                    onFileLoaded={this.handleReadCSV}
+                    inputRef={this.fileInput}
+                    style={{ display: 'none' }}
+                    onError={this.handleOnError}
+                />
+                <button onClick={this.handleImportOffer}>Import</button>
             </div>
         )
     }

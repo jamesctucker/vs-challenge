@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { XYPlot, XAxis, YAxis, HorizontalGridLines, LineSeries } from 'react-vis';
+import Datetime from 'react-datetime'
+import './Chart.css';
 
 class ChartComponent extends Component {
     state = {
@@ -23,6 +25,12 @@ class ChartComponent extends Component {
         return (
             <div>
                 <h1>Chart Component</h1>
+                <div id="start-date">
+                    <Datetime />
+                </div>
+                <div id="end-date">
+                    <Datetime />
+                </div>
                 <XYPlot
                     width={300}
                     height={300}>

@@ -5,7 +5,10 @@ const fs = require('fs');
 const csvFilePath = 'server/routes/data.csv'
 const csv = require('csvtojson')
 
-csv()
+csv({
+    noheader: false,
+    headers: ['timestamp', 'sensor', 'people']
+})
     .fromFile(csvFilePath)
     .then((jsonObj) => {
         console.log(jsonObj);

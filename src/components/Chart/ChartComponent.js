@@ -1,7 +1,20 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 import { XYPlot, XAxis, YAxis, HorizontalGridLines, LineSeries } from 'react-vis';
 
 class ChartComponent extends Component {
+    state = {
+        readings: [],
+        isLoading: true,
+        errors: null,
+    }
+
+    componentDidMount() {
+        axios
+            .get("https://api.jsonbin.io/b/5ca971e985438b0272f0189b")
+            .then(response => console.log(response))
+            .catch(error => this.setState({ error, isLoading: false }));
+    }
 
 
 

@@ -7,16 +7,26 @@ import './Chart.css';
 
 
 class ChartComponent extends Component {
-    state = {
-        readings: [],
-        isLoading: true,
-        errors: null,
+    constructor(props) {
+        super(props);
+        this.state = {
+            readings: [],
+            isLoading: true,
+            errors: null,
+        }
     }
 
     componentDidMount() {
         axios
             .get("https://api.jsonbin.io/b/5ca971e985438b0272f0189b")
-            .then(response => console.log(response))
+            .then(response => {
+                this.setState({
+                    readings: response.data,
+                    isLoading: false
+                });
+                console.log(this.state);
+            })
+            // If we catch any errors connecting, let's update accordingly
             .catch(error => this.setState({ error, isLoading: false }));
     }
 

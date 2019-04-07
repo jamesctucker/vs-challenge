@@ -24,11 +24,33 @@ class ChartComponent extends Component {
                     readings: response.data,
                     isLoading: false
                 });
-                console.log(this.state);
+                console.log(this.state.readings);
             })
             // If we catch any errors connecting, let's update accordingly
             .catch(error => this.setState({ error, isLoading: false }));
     }
+
+    // isSensorOne(state) {
+    //     return state.readings.sensor === 'Sensor 1';
+    // }
+
+    //     .then(response =>
+    //         response.data.filter((reading) => {
+    //             return reading.sensor === "Sensor 3";
+    //         }))
+    //     .then(readings => {
+    //         this.setState({
+    //             readings,
+    //             isLoading: false
+    //         });
+    //         console.log(this.state.readings);
+    //     })
+    //     // If we catch any errors connecting, let's update accordingly
+    //     .catch(error => this.setState({ error, isLoading: false }));
+
+    // }
+
+
 
 
 
@@ -36,9 +58,13 @@ class ChartComponent extends Component {
         const MSEC_DAILY = 86400000;
         const timestamp = new Date().getTime();
 
+
         return (
             <div>
+                {/* need to filter data into 3 separate datasets arranged by sensor name */}
+                {JSON.stringify(this.state.readings)}
                 <h1>Chart Component</h1>
+                {/* need to enable user to sort data according to user-selected dates/times */}
                 <div id="start-date">
                     <Datetime />
                 </div>
@@ -50,6 +76,7 @@ class ChartComponent extends Component {
                     width={300}
                     height={300}>
                     <HorizontalGridLines />
+                    {/* need to map through sensor 1 data */}
                     <LineSeries
                         color="red"
                         data={[
@@ -59,7 +86,16 @@ class ChartComponent extends Component {
                             { x: timestamp + MSEC_DAILY * 4, y: 12 }
                         ]}
                     />
-                    <LineSeries data={null} />
+                    {/* need to map through sensor 2 data */}
+                    <LineSeries
+                        data={[
+                            { x: timestamp + MSEC_DAILY, y: 10 },
+                            { x: timestamp + MSEC_DAILY * 2, y: 4 },
+                            { x: timestamp + MSEC_DAILY * 3, y: 2 },
+                            { x: timestamp + MSEC_DAILY * 4, y: 15 }
+                        ]}
+                    />
+                    {/* need to map through sensor 3 data */}
                     <LineSeries
                         data={[
                             { x: timestamp + MSEC_DAILY, y: 10 },

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
-import FileReader from '.././FileReader/FileReader';
+import Home from '.././Home/Home';
 
 class App extends Component {
   render() {
@@ -8,10 +8,10 @@ class App extends Component {
       <div className="App">
         <header className="App-header">
          <h1>
-           CSV Converter
+           VergeSense Dashboard
          </h1>
         </header>
-        <FileReader />
+        <Home />
       </div>
     );
   }

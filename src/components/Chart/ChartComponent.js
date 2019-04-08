@@ -8,6 +8,8 @@ class ChartComponent extends Component {
         super(props);
         this.state = {
             readings: [],
+            start_date: null,
+            end_date: null,
             errors: null,
         }
     }
@@ -85,6 +87,19 @@ class ChartComponent extends Component {
         return dataSet
 
     }
+
+    handleUpdateStart = (event) => {
+        this.setState({
+            start_date: event.target.value
+        })
+    }
+
+    handleUpdateEnd = (event) => {
+        this.setState({
+            end_date: event.target.value
+        })
+    }
+
     render() {
         // this.buildData()
         // this.sensorOne()
@@ -104,10 +119,13 @@ class ChartComponent extends Component {
                 <h1>Chart Component</h1>
                 {/* need to enable user to sort data according to user-selected dates/times */}
                 <div id="start-date">
-                    <Datetime />
+                    <Datetime onChange={this.handleUpdateStart} />
                 </div>
                 <div id="end-date">
-                    <Datetime />
+                    <Datetime onChange={this.handleUpdateEnd} />
+                </div>
+                <div id="end-date">
+                    <button>Filter</button>
                 </div>
                 <h3>Key</h3>
                 <ul>

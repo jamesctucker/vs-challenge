@@ -3,66 +3,104 @@ import axios from 'axios';
 import { XYPlot, XAxis, YAxis, HorizontalGridLines, LineSeries } from 'react-vis';
 import Datetime from 'react-datetime'
 import './Chart.css';
-
-
-
 class ChartComponent extends Component {
     constructor(props) {
         super(props);
         this.state = {
             readings: [],
-            isLoading: true,
             errors: null,
         }
     }
-
     componentDidMount() {
         axios
-            .get("https://api.jsonbin.io/b/5ca971e985438b0272f0189b")
+            .get("https://api.jsonbin.io/b/5caac4fe85438b0272f11548")
             .then(response => {
                 this.setState({
                     readings: response.data,
-                    isLoading: false
                 });
-                console.log(this.state.readings);
             })
             // If we catch any errors connecting, let's update accordingly
-            .catch(error => this.setState({ error, isLoading: false }));
+            .catch(error => this.setState({ error }));
     }
 
-    // isSensorOne(state) {
-    //     return state.readings.sensor === 'Sensor 1';
-    // }
+    filterUniqueSensors = (sensors) => {
+        let uniqueObject = {};
+        for (let name of sensors) {
+            uniqueObject[name.sensor] = 1;
+        }
+        let uniqueArray = [];
+        for (let id in uniqueObject) {
+            uniqueArray.push(id);
+        }
+        return uniqueArray;
+    }
+    buildData = () => {
+        let sensorNames = this.filterUniqueSensors(this.state.readings);
+        let groupedSensors = []
+        let fitleredSensorsArray;
+        for (let name of sensorNames) {
+            fitleredSensorsArray = this.state.readings.filter(eachSensor => {
+                return eachSensor.sensor === name
 
-    //     .then(response =>
-    //         response.data.filter((reading) => {
-    //             return reading.sensor === "Sensor 3";
-    //         }))
-    //     .then(readings => {
-    //         this.setState({
-    //             readings,
-    //             isLoading: false
-    //         });
-    //         console.log(this.state.readings);
-    //     })
-    //     // If we catch any errors connecting, let's update accordingly
-    //     .catch(error => this.setState({ error, isLoading: false }));
+            })
 
-    // }
+            groupedSensors.push(fitleredSensorsArray)
+        }
+        let currentData = []
+        groupedSensors.map(batch => {
+            batch.map(thisIteration => {
+                currentData.push(thisIteration)
+            })
+        })
 
+        return currentData;
+    }
+    sensorOne = () => {
+        let dataSet = []
+        //  console.log(this.buildData().length);
+        this.buildData().filter(z => {
+            if (z.sensor === "Sensor 1") {
+                dataSet.push({ x: new Date(z.timestamp).getTime() + 86400000, y: z.people })
+            }
+        })
+        return dataSet
+    }
+    sensorTwo = () => {
+        let dataSet = []
+        this.buildData().filter(z => {
+            if (z.sensor === "Sensor 2") {
+                dataSet.push({ x: new Date(z.timestamp).getTime() + 86400000, y: z.people })
+            }
+        })
+        return dataSet
+    }
+    sensorThree = () => {
+        let dataSet = []
+        this.buildData().filter(z => {
+            if (z.sensor === "Sensor 3") {
+                dataSet.push({ x: new Date(z.timestamp).getTime() + 86400000, y: z.people })
+            }
+        })
 
+        return dataSet
 
-
-
+    }
     render() {
-        const MSEC_DAILY = 86400000;
-        const timestamp = new Date().getTime();
-
+        // this.buildData()
+        // this.sensorOne()
+        // function buildLineSeries() {
+        //     return <LineSeries
+        //         color="red"
+        //     // data={this.buildData()}
+        //     />
+        // }
+        // const timestamp = new Date().getTime();
+        // // console.log('date', timestamp);
 
         return (
             <div>
                 {/* need to filter data into 3 separate datasets arranged by sensor name */}
-                {JSON.stringify(this.state.readings)}
+                {/* {JSON.stringify(this.state.readings)} */}
                 <h1>Chart Component</h1>
                 {/* need to enable user to sort data according to user-selected dates/times */}
                 <div id="start-date">
@@ -71,45 +109,39 @@ class ChartComponent extends Component {
                 <div id="end-date">
                     <Datetime />
                 </div>
+                <h3>Key</h3>
+                <ul>
+                    <li>Red: Sensor 1</li>
+                    <li>Blue: Sensor 2</li>
+                    <li>Green: Sensor 3</li>
+                </ul>
                 <XYPlot
+                    id="chart"
                     xType="time"
-                    width={300}
-                    height={300}>
+                    width={1200}
+                    height={400}>
                     <HorizontalGridLines />
                     {/* need to map through sensor 1 data */}
                     <LineSeries
                         color="red"
-                        data={[
-                            { x: timestamp + MSEC_DAILY, y: 3 },
-                            { x: timestamp + MSEC_DAILY * 2, y: 5 },
-                            { x: timestamp + MSEC_DAILY * 3, y: 15 },
-                            { x: timestamp + MSEC_DAILY * 4, y: 12 }
-                        ]}
+                        data={this.sensorOne()}
                     />
                     {/* need to map through sensor 2 data */}
                     <LineSeries
-                        data={[
-                            { x: timestamp + MSEC_DAILY, y: 10 },
-                            { x: timestamp + MSEC_DAILY * 2, y: 4 },
-                            { x: timestamp + MSEC_DAILY * 3, y: 2 },
-                            { x: timestamp + MSEC_DAILY * 4, y: 15 }
-                        ]}
+                        color="blue"
+                        data={this.sensorTwo()}
                     />
                     {/* need to map through sensor 3 data */}
                     <LineSeries
-                        data={[
-                            { x: timestamp + MSEC_DAILY, y: 10 },
-                            { x: timestamp + MSEC_DAILY * 2, y: 4 },
-                            { x: timestamp + MSEC_DAILY * 3, y: 2 },
-                            { x: timestamp + MSEC_DAILY * 4, y: 15 }
-                        ]}
+                        color="green"
+                        data={this.sensorThree()}
                     />
-                    <XAxis />
-                    <YAxis />
+                    <XAxis title="Timestamp" />
+                    <YAxis title="People Detected" />
                 </XYPlot>
+
             </div>
         )
     }
 }
-
 export default ChartComponent;

@@ -2,19 +2,53 @@
   min-width: 800px;
 } */
 
+ /* styling for material-ui components */
+#key-card {
+  min-width: 120px;
+  min-height: 300px;
+  padding: 10px;
+}
+
+#chart-card {
+  min-width: 1200px;
+  min-height: 400px;
+  padding: 20px;
+}
+
+/* ul {
+  list-style: none;
+} */
+
+#red-icon {
+  color: red;
+  margin-top: 10px;
+}
+
+#blue-icon {
+  color: blue;
+  margin-top: 10px;
+
+}
+
+#green-icon {
+  color: green;
+  margin-top: 10px;
+
+}
+
 
 /* styling for react datetime */
 
 #start-date {
 	width: 12%;
 	display: inline-block;
-    margin: 40px;
+  margin: 40px;
 }
 
 #end-date {
 	width: 12%;
-    display: inline-block;
-    margin: 40px;
+  display: inline-block;
+  margin: 40px;
 }
 
 .rdt {

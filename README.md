@@ -1,5 +1,7 @@
 # VergeSense Coding Challenge - James Tucker
 
+![](chart.gif)
+
 ### Installing
 
 Steps to get the development environment running:

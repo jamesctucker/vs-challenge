@@ -10,8 +10,8 @@ class ChartComponent extends Component {
         super(props);
         this.state = {
             readings: [],
-            start_date: [],
-            end_date: null,
+            start_date: "2019-03-16T05:00:00.000Z",
+            end_date: "2019-04-01T05:00:00.000Z",
             errors: null,
         }
     }
@@ -22,6 +22,7 @@ class ChartComponent extends Component {
                 this.setState({
                     readings: response.data,
                 });
+                console.log(response.data);
             })
             // If we catch any errors connecting, let's update accordingly
             .catch(error => this.setState({ error }));
@@ -41,14 +42,14 @@ class ChartComponent extends Component {
     buildData = () => {
         let sensorNames = this.filterUniqueSensors(this.state.readings);
         let groupedSensors = []
-        let fitleredSensorsArray;
+        let filteredSensorsArray;
         for (let name of sensorNames) {
-            fitleredSensorsArray = this.state.readings.filter(eachSensor => {
+            filteredSensorsArray = this.state.readings.filter(eachSensor => {
                 return eachSensor.sensor === name
 
             })
 
-            groupedSensors.push(fitleredSensorsArray)
+            groupedSensors.push(filteredSensorsArray)
         }
         let currentData = []
         groupedSensors.map(batch => {
@@ -63,7 +64,7 @@ class ChartComponent extends Component {
         let dataSet = []
         //  console.log(this.buildData().length);
         this.buildData().filter(z => {
-            if (z.sensor === "Sensor 1") {
+            if (z.sensor === "Sensor 1" && z.timestamp >= this.state.start_date && z.timestamp <= this.state.end_date) {
                 dataSet.push({ x: new Date(z.timestamp).getTime() + 86400000, y: z.people })
             }
         })
@@ -90,19 +91,6 @@ class ChartComponent extends Component {
 
     }
 
-    handleUpdateStart = (field) => {
-        return event => {
-            const value = event._d;
-            this.setState({ start_date: value });
-            console.log(this.state.start_date);
-        }
-    }
-
-    handleUpdateEnd = (event) => {
-        this.setState({
-            end_date: event.target.value
-        })
-    }
 
     render() {
         // this.buildData()
@@ -128,7 +116,9 @@ class ChartComponent extends Component {
                     />
                 </div>
                 <div id="end-date">
-                    <Datetime value={new Date()} onChange={console.log} />
+                    <Datetime
+                        onChange={(e) => { this.setState({ end_date: moment(e).toJSON() }) }}
+                    />
                 </div>
                 <div id="end-date">
                     <button>Filter</button>
@@ -147,18 +137,19 @@ class ChartComponent extends Component {
                     <HorizontalGridLines />
                     {/* need to map through sensor 1 data */}
                     <LineSeries
-                        color="red"
                         data={this.sensorOne()}
+                        style={{ stroke: 'red', strokeWidth: 3 }}
                     />
                     {/* need to map through sensor 2 data */}
                     <LineSeries
-                        color="blue"
                         data={this.sensorTwo()}
+                        style={{ stroke: 'blue', strokeWidth: 3 }}
+
                     />
                     {/* need to map through sensor 3 data */}
                     <LineSeries
-                        color="green"
                         data={this.sensorThree()}
+                        style={{ stroke: 'green', strokeWidth: 3 }}
                     />
                     <XAxis title="Timestamp" />
                     <YAxis title="People Detected" />

@@ -1,14 +1,16 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { XYPlot, XAxis, YAxis, HorizontalGridLines, LineSeries } from 'react-vis';
-import Datetime from 'react-datetime'
+import Datetime from 'react-datetime';
+import moment from 'moment';
 import './Chart.css';
+
 class ChartComponent extends Component {
     constructor(props) {
         super(props);
         this.state = {
             readings: [],
-            start_date: null,
+            start_date: [],
             end_date: null,
             errors: null,
         }
@@ -88,10 +90,12 @@ class ChartComponent extends Component {
 
     }
 
-    handleUpdateStart = (event) => {
-        this.setState({
-            start_date: event.target.value
-        })
+    handleUpdateStart = (field) => {
+        return event => {
+            const value = event._d;
+            this.setState({ start_date: value });
+            console.log(this.state.start_date);
+        }
     }
 
     handleUpdateEnd = (event) => {
@@ -115,14 +119,16 @@ class ChartComponent extends Component {
         return (
             <div>
                 {/* need to filter data into 3 separate datasets arranged by sensor name */}
-                {/* {JSON.stringify(this.state.readings)} */}
+                {JSON.stringify(this.state.start_date)}
                 <h1>Chart Component</h1>
                 {/* need to enable user to sort data according to user-selected dates/times */}
                 <div id="start-date">
-                    <Datetime onChange={this.handleUpdateStart} />
+                    <Datetime
+                        onChange={(e) => { this.setState({ start_date: moment(e).toJSON() }) }}
+                    />
                 </div>
                 <div id="end-date">
-                    <Datetime onChange={this.handleUpdateEnd} />
+                    <Datetime value={new Date()} onChange={console.log} />
                 </div>
                 <div id="end-date">
                     <button>Filter</button>

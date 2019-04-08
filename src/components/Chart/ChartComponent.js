@@ -10,7 +10,7 @@ class ChartComponent extends Component {
         super(props);
         this.state = {
             readings: [],
-            start_date: "2019-03-16T05:00:00.000Z",
+            start_date: "2019-01-01T05:00:00.000Z",
             end_date: "2019-04-01T05:00:00.000Z",
             errors: null,
         }
@@ -73,7 +73,7 @@ class ChartComponent extends Component {
     sensorTwo = () => {
         let dataSet = []
         this.buildData().filter(z => {
-            if (z.sensor === "Sensor 2") {
+            if (z.sensor === "Sensor 2" && z.timestamp >= this.state.start_date && z.timestamp <= this.state.end_date) {
                 dataSet.push({ x: new Date(z.timestamp).getTime() + 86400000, y: z.people })
             }
         })
@@ -82,7 +82,7 @@ class ChartComponent extends Component {
     sensorThree = () => {
         let dataSet = []
         this.buildData().filter(z => {
-            if (z.sensor === "Sensor 3") {
+            if (z.sensor === "Sensor 3" && z.timestamp >= this.state.start_date && z.timestamp <= this.state.end_date) {
                 dataSet.push({ x: new Date(z.timestamp).getTime() + 86400000, y: z.people })
             }
         })
@@ -93,23 +93,11 @@ class ChartComponent extends Component {
 
 
     render() {
-        // this.buildData()
-        // this.sensorOne()
-        // function buildLineSeries() {
-        //     return <LineSeries
-        //         color="red"
-        //     // data={this.buildData()}
-        //     />
-        // }
-        // const timestamp = new Date().getTime();
-        // // console.log('date', timestamp);
 
         return (
             <div>
-                {/* need to filter data into 3 separate datasets arranged by sensor name */}
-                {JSON.stringify(this.state.start_date)}
+                {/* {JSON.stringify(this.state.start_date)} */}
                 <h1>Chart Component</h1>
-                {/* need to enable user to sort data according to user-selected dates/times */}
                 <div id="start-date">
                     <Datetime
                         onChange={(e) => { this.setState({ start_date: moment(e).toJSON() }) }}
@@ -135,18 +123,14 @@ class ChartComponent extends Component {
                     width={1200}
                     height={400}>
                     <HorizontalGridLines />
-                    {/* need to map through sensor 1 data */}
                     <LineSeries
                         data={this.sensorOne()}
                         style={{ stroke: 'red', strokeWidth: 3 }}
                     />
-                    {/* need to map through sensor 2 data */}
                     <LineSeries
                         data={this.sensorTwo()}
                         style={{ stroke: 'blue', strokeWidth: 3 }}
-
                     />
-                    {/* need to map through sensor 3 data */}
                     <LineSeries
                         data={this.sensorThree()}
                         style={{ stroke: 'green', strokeWidth: 3 }}
